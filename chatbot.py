@@ -9,11 +9,11 @@ from dotenv import load_dotenv
 load_dotenv()
 client = OpenAI(
     api_key=os.getenv("API_KEY"),
-    base_url="https://api.deepseek.com"
+    base_url=os.getenv("BASE_URL")
 )
 
 st.title("🤖 我的第一个AI助手")
-st.caption("基于DeepSeek大模型")
+st.caption(f"基于{os.getenv('MODEL_PROVIDER', 'DeepSeek')}大模型")
 
 # 初始化对话历史
 if "messages" not in st.session_state:
@@ -34,7 +34,7 @@ if prompt := st.chat_input("输入你的问题..."):
     # 获取AI回复（流式输出）
     with st.chat_message("assistant"):
         response = client.chat.completions.create(
-            model="deepseek-v4-flash",
+            model=os.getenv("MODEL_NAME", "deepseek-v4-flash"),
             messages=[
                 {"role": "system", "content": "你是一个专业的AI助手，回答简洁准确"},
                 *st.session_state.messages
